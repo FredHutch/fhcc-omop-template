@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This repo provides an example of data and analytics engineering best practices for development of an OMOP CDM instance.
+This repo provides an example of data and analytics engineering best practices for development of an OMOP CDM instance on Databricks.
 
 Add a short description of your OMOP CDM instance here, including:
 
