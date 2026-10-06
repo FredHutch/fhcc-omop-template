@@ -4,8 +4,7 @@ resources:
       name: omop_refresh_orchestration
       email_notifications:
         on_failure:
-          - mstachur@fredhutch.org
-          - analytics@fredhutch.org
+          - you@gmail.com
       schedule:
         quartz_cron_expression: 0 0 2 ? * Wed
         timezone_id: America/Los_Angeles
