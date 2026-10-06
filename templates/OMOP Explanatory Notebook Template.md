@@ -1,7 +1,5 @@
 # OMOP Explanatory Notebook Template
 
-Owner: Monica Gerber
-
 ## Resources
 
 ### OHDSI
