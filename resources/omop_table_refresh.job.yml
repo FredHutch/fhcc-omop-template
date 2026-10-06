@@ -4,8 +4,7 @@ resources:
       name: omop_table_refresh
       email_notifications:
         on_failure:
-          - mstachur@fredhutch.org
-          - analytics@fredhutch.org
+          - you@gmail.com
       tasks:
         - task_key: person_preprocessing
           sql_task:
