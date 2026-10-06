@@ -1,0 +1,158 @@
+resources:
+  jobs:
+    omop_schema_creation:
+      name: omop_schema_creation
+      tasks:
+        - task_key: table_creation
+          sql_task:
+            file: 
+                path: ../../models/table_creation/table_creation.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: intermediate_table_creation
+          sql_task:
+            file: 
+              path: ../../models/table_creation/intermediate_table_creation.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: not_null_constraints
+          depends_on:
+            - task_key: table_creation
+          sql_task:
+            file: 
+              path: ../../models/table_creation/not_null_constraints.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: primary_key_constraints
+          depends_on:
+            - task_key: not_null_constraints
+          sql_task:
+            file: 
+              path: ../../models/table_creation/primary_key_constraints.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: foreign_key_constraints
+          depends_on:
+            - task_key: primary_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/table_creation/foreign_key_constraints.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: person_preprocessing_comments
+          depends_on:
+            - task_key: intermediate_table_creation
+          sql_task:
+            file: 
+              path: ../../models/person_preprocessing/person_preprocessing_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: visit_occurrence_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/visit_occurrence/visit_occurrence_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: location_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/location/location_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: person_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/person/person_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: condition_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/condition_occurrence/condition_occurrence_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: procedure_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/procedure_occurrence/procedure_occurrence_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: measurement_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/measurement/measurement_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: cdm_source_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/cdm_source/cdm_source_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: note_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/note/note_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: drug_exposure_comments
+          depends_on:
+            - task_key: foreign_key_constraints
+          sql_task:
+            file: 
+              path: ../../models/drug_exposure/drug_exposure_comments.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+      tags:
+        Function: Transformation
+        "Transformation Jobs": OMOP
+      queue:
+        enabled: true
