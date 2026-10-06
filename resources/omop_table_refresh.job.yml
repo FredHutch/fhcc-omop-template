@@ -1,0 +1,276 @@
+resources:
+  jobs:
+    omop_table_refresh:
+      name: omop_table_refresh
+      email_notifications:
+        on_failure:
+          - mstachur@fredhutch.org
+          - analytics@fredhutch.org
+      tasks:
+        - task_key: person_preprocessing
+          sql_task:
+            file:
+              path: ../../models/person_preprocessing/person_preprocessing.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: location_table_refresh
+          depends_on:
+            - task_key: person_preprocessing
+          sql_task:
+            file:
+              path: ../../models/location/populate_location_table.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: care_site_table_refresh
+          depends_on:
+            - task_key: location_table_refresh
+          sql_task:
+            file:
+              path: ../../models/care_site/populate_care_site_table.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: provider_table_refresh
+          depends_on:
+            - task_key: care_site_table_refresh
+          sql_task:
+            file:
+              path: ../../models/provider/populate_provider_table.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: fact_relationship_table_refresh
+          depends_on:
+            - task_key: care_site_table_refresh
+          sql_task:
+            file:
+              path: ../../models/fact_relationship/populate_fact_relationship_table.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: person_table_refresh
+          depends_on:
+            - task_key: provider_table_refresh
+          sql_task:
+            file:
+              path: ../../models/person/populate_person_table.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: observation_research_study_refresh
+          depends_on:
+            - task_key: person_table_refresh
+          sql_task:
+            file:
+              path: ../../models/observation/observation_research_study_table.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+              takepartnw_catalog: ${var.takepartnw_catalog}
+              takepartnw_schema: ${var.takepartnw_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: death_table_refresh
+          depends_on:
+            - task_key: person_table_refresh
+          sql_task:
+            file:
+              path: ../../models/death/populate_death_table.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: visit_occurrence_table_refresh
+          depends_on:
+            - task_key: death_table_refresh
+          sql_task:
+            file:
+              path: ../../models/visit_occurrence/populate_visit_occurrence_table.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: condition_occurrence_table_refresh
+          depends_on:
+            - task_key: visit_occurrence_table_refresh
+          sql_task:
+            file:
+              path: ../../models/condition_occurrence/populate_condition_occurrence_table.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              clarity_weekly_schema: ${var.clarity_weekly_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}    
+        - task_key: procedure_occurrence_table_refresh
+          depends_on:
+            - task_key: visit_occurrence_table_refresh
+          sql_task:
+            file:
+              path: ../../models/procedure_occurrence/populate_procedure_occurrence.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              clarity_weekly_schema: ${var.clarity_weekly_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: measurement_table_refresh
+          depends_on:
+            - task_key: visit_occurrence_table_refresh
+          sql_task:
+            file:
+              path: ../../models/measurement/populate_measurement.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              clarity_weekly_schema: ${var.clarity_weekly_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: drug_exposure_table_refresh
+          depends_on:
+            - task_key: visit_occurrence_table_refresh
+          sql_task:
+            file:
+              path: ../../models/drug_exposure/populate_drug_exposure.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              clarity_weekly_schema: ${var.clarity_weekly_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: note_table_refresh
+          depends_on:
+            - task_key: visit_occurrence_table_refresh
+          sql_task:
+            file:
+              path: ../../models/note/populate_note.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              clarity_weekly_schema: ${var.clarity_weekly_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: observation_period_table_refresh
+          depends_on:
+            - task_key: visit_occurrence_table_refresh
+          sql_task:
+            file:
+              path: ../../models/observation_period/populate_observation_period.sql
+            parameters:
+              clarity_catalog: ${var.clarity_catalog}
+              clarity_daily_schema: ${var.clarity_daily_schema}
+              clarity_weekly_schema: ${var.clarity_weekly_schema}
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: observation_combined
+          depends_on:
+            - task_key: observation_research_study_refresh
+          run_if: ALL_DONE
+          sql_task:
+            file:
+              path: ../../models/observation/observation_combined.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_intermediate_schema: ${var.omop_intermediate_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: cdm_source_table_refresh
+          depends_on:
+            - task_key: condition_occurrence_table_refresh
+            - task_key: procedure_occurrence_table_refresh
+            - task_key: measurement_table_refresh
+            - task_key: drug_exposure_table_refresh
+            - task_key: observation_period_table_refresh
+            - task_key: observation_combined
+            - task_key: fact_relationship_table_refresh
+          run_if: ALL_DONE
+          sql_task:
+            file:
+              path: ../../models/cdm_source/populate_cdm_source.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: dqx_validation
+          depends_on:
+            - task_key: cdm_source_table_refresh
+          run_if: ALL_DONE
+          spark_python_task:
+            python_file: ../../monitoring/omop_dqx_monitoring.py
+            parameters:
+              - "--omop_catalog"
+              - ${var.omop_catalog}
+              - "--omop_schema"
+              - ${var.omop_schema}
+              - "--omop_monitoring_schema"
+              - ${var.omop_monitoring_schema}
+              - "--path"
+              - ${workspace.file_path}
+          environment_key: default
+        # alert_task is in beta curently and sql_task.alert only works on alerts created with Databricks legacy alerts.
+        # For now we have scheduled this alert, but once alert_task is available it would be preferred to run this task
+        # within this job after dqx_validation.
+        # - task_key: validation_alert
+        #   # depends_on:
+        #   #   - task_key: dqx_validation
+        #   alert_task:
+        #     warehouse_id: ${var.warehouse_id}
+        #     alert_id: ${resources.alerts.omop_dqx_alert.id}
+      tags:
+        Function: Transformation
+        "Transformation Jobs": OMOP
+      queue:
+        enabled: true
+      performance_target: STANDARD
+
+      # A list of task execution environment specifications that can be referenced by tasks of this job.
+      environments:
+        - environment_key: default
+
+          # Full documentation of this spec can be found at:
+          # https://docs.databricks.com/api/workspace/jobs/create#environments-spec
+          spec:
+            environment_version: "5"
+            dependencies:
+              - databricks-labs-dqx==0.13.0

@@ -1,0 +1,29 @@
+resources:
+  jobs:
+    omop_vocabulary_refresh:
+      name: omop_vocabulary_refresh
+      tasks:
+        - task_key: vocabulary_athena_only
+          sql_task:
+            file:
+              path: ../../models/vocabulary_concept/vocabulary_concepts_athena_only.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_vocab_schema: ${var.omop_vocab_schema}
+            warehouse_id: ${var.warehouse_id}
+        - task_key: vocabulary_custom
+          sql_task:
+            file: 
+              path: ../../models/vocabulary_concept/vocabulary_concepts_custom_updates.sql
+            parameters:
+              omop_catalog: ${var.omop_catalog}
+              omop_schema: ${var.omop_schema}
+              omop_vocab_schema: ${var.omop_vocab_schema}
+            warehouse_id: ${var.warehouse_id}
+      queue:
+        enabled: true
+      performance_target: STANDARD
+      tags:
+        Function: Transformation
+        "Transformation Jobs": OMOP
