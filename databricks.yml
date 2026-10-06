@@ -1,0 +1,131 @@
+# This is a Databricks asset bundle definition
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: omop-cdm-v5.4
+
+# Folders to include in the bundle
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+targets:
+  develop:
+    # For development on a feature branch.
+    # In development mode job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+    mode: development
+    default: true
+    presets:
+      # Include the user and branch name on resources deployed by the bundle, to distinguish 
+      # different resources deployed during the development process.
+      name_prefix: '${workspace.current_user.short_name}_${bundle.git.branch}_'
+
+      # When deploying the bundle through the web UI, this enforces use of the root_path
+      # defined in the bundle, rather than the workspace copies within the user's path. 
+      source_linked_deployment: false
+    workspace:
+      # Set to your test workspace URL
+      host: https://your-test-workspace-url.cloud.databricks.com
+
+      # A folder with appropriate permissions where bundles will be deployed to
+      root_path: /Workspace/OMOP/.bundle/${bundle.name}/${workspace.current_user.userName}/${bundle.git.branch}/${bundle.target}
+    run_as:
+      # Service Principle that will run the jobs in the test workspace
+      service_principal_name: 12345678-1234-1234-1234-1234567890ab
+    variables:
+      # Catalogs and schemas you will reference that will vary between the workspaces
+      omop_catalog: curated_omop_test
+      omop_schema: omop
+      omop_intermediate_schema: omop_intermediate
+      omop_vocab_schema: omop_vocab
+      omop_monitoring_schema: omop_monitoring
+      
+      # SQL warehouse where jobs will be run
+      warehouse_id: 1234567890abcdef
+      
+    permissions:
+      # Permissions to apply to all resoures in the bundle
+      - group_name: "Product Management"
+        level: "CAN_VIEW"
+      - group_name: "Data Engineer"
+        level: "CAN_MANAGE"
+      - group_name: "Data Governance"
+        level: "CAN_VIEW"
+      - group_name: "Data Steward"
+        level: "CAN_MANAGE"
+      - service_principal_name: 12345678-1234-1234-1234-1234567890ab 
+        level: "CAN_RUN"
+
+
+  test:
+    # Running in production mode using upstream production data within the test workspace.
+    # Used for testing before deployment to the production workspace.
+    mode: production
+    workspace:
+      # Set to your test workspace URL
+      host: https://your-test-workspace-url.cloud.databricks.com
+
+      # A folder with appropriate permissions where bundles will be deployed to
+      root_path: /Workspace/OMOP/.bundle/${bundle.name}/${bundle.git.branch}/${bundle.target}
+    run_as:
+      # Service Principle that will run the jobs in the test workspace
+      service_principal_name: 12345678-1234-1234-1234-1234567890ab 
+    variables:
+      # Catalogs and schemas you will reference that will vary between the workspaces
+      omop_catalog: curated_omop_test
+      omop_schema: omop
+      omop_intermediate_schema: omop_intermediate
+      omop_vocab_schema: omop_vocab
+      omop_monitoring_schema: omop_monitoring
+      
+      # SQL warehouse where jobs will be run
+      warehouse_id: 1234567890abcdef
+    permissions:
+      # Permissions to apply to all resoures in the bundle
+      - group_name: "Product Management"
+        level: "CAN_VIEW"
+      - group_name: "Data Engineer"
+        level: "CAN_MANAGE"
+      - group_name: "Data Governance"
+        level: "CAN_VIEW"
+      - group_name: "Data Steward"
+        level: "CAN_MANAGE"
+      - service_principal_name: 12345678-1234-1234-1234-1234567890ab 
+        level: "CAN_RUN"
+
+  prod:
+    # Running in production mode using production data within the production workspace.
+    # This should only be created from the main branch.
+    mode: production
+    workspace:
+      # Set to your production workspace URL
+      host: https://your-prod-workspace-url.cloud.databricks.com
+
+      # A folder with appropriate permissions where bundles will be deployed to
+      root_path: /Workspace/OMOP/.bundle/${bundle.name}/${bundle.git.branch}/${bundle.target}
+    run_as:
+      # Service Principle that will run the jobs in the producation workspace
+      service_principal_name: 12345678-1234-1234-1234-1234567890ab 
+    variables:
+      # Catalogs and schemas you will reference that will vary between the workspaces
+      omop_catalog: curated_omop
+      omop_schema: omop
+      omop_intermediate_schema: omop_intermediate
+      omop_vocab_schema: omop_vocab
+      omop_monitoring_schema: omop_monitoring
+      
+      # SQL warehouse where jobs will be run
+      warehouse_id: 1234567890abcdef
+      
+    permissions:
+      # Permissions to apply to all resoures in the bundle
+      - group_name: "Product Management"
+        level: "CAN_VIEW"
+      - group_name: "Data Engineer"
+        level: "CAN_RUN"
+      - group_name: "Data Governance"
+        level: "CAN_VIEW"
+      - group_name: "Data Steward"
+        level: "CAN_MANAGE"
+      - service_principal_name: 12345678-1234-1234-1234-1234567890ab
+        level: "CAN_RUN"
