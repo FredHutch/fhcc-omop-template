@@ -1,13 +1,15 @@
 # This file defines individuals and teams reponsible for the code in this repository
+# The lines defining owners are commented out so not applied to the repo since this is
+# only for demonstration purposes.
 
 # These owners will be the default owners for everything in
 # the repo, unless a later match takes precedence.
 # They will be requested for review when someone opens a pull request.
-*  @fh-cards/omop
+# *  @fh-cards/omop 
 
 # Engineering lead reviews any changes related to resources and DABs
-/resources/  @fh-cards/ocdo-engineering-lead
-*.yml @fh-cards/ocdo-engineering-lead
+# /resources/  @fh-cards/ocdo-engineering-lead
+# *.yml @fh-cards/ocdo-engineering-lead
 
 
 # Additional invidiuals or teams can be defined as codeowners of specific
