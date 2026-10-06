@@ -1,0 +1,15 @@
+# This file defines individuals and teams reponsible for the code in this repository
+
+# These owners will be the default owners for everything in
+# the repo, unless a later match takes precedence.
+# They will be requested for review when someone opens a pull request.
+*  @fh-cards/omop
+
+# Engineering lead reviews any changes related to resources and DABs
+/resources/  @fh-cards/ocdo-engineering-lead
+*.yml @fh-cards/ocdo-engineering-lead
+
+
+# Additional invidiuals or teams can be defined as codeowners of specific
+# files, directories, or file types if relevant later.
+# The last matching pattern takes the most precedence.
