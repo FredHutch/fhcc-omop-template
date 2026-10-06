@@ -1,9 +1,3 @@
-# Table Requirements Template
-
-Owner: Monica Gerber
-
-Examples: [visit_occurrence](https://github-cards.fhcrc.org/CARDS/omop-cdm-v5.4/blob/feature-visit-requirements/models/visit_occurrence/visit_occurrence.md) and [person](https://github-cards.fhcrc.org/CARDS/omop-cdm-v5.4/blob/dev/models/person/person.md) table requirements
-
 # OMOP CDM Requirements Definitions for <*Table Name*> **Table
 
 ## Overview
