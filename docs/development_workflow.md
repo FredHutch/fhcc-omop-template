@@ -45,7 +45,7 @@ We are using the [git flow](https://nvie.com/posts/a-successful-git-branching-mo
 
 **Writing Transformation Code**
 
-1. Once the requirements have been settled on, SQL transformation code development begins following the `docs/OMOP Technical Implementation.md` guide and our `docs/Team Coding Standards.md`. This always takes place in the Databricks test environment. 
+1. Once the requirements have been settled on, SQL transformation code development begins following the `docs/technical_implementation.md` guide and our `docs/team_coding_standards.md`. This always takes place in the Databricks test environment. 
 2. The developer may use a schema in `curated_omop_test` to conduct adhoc checks/profiling on transformation code.
 3. Code is always reviewed by at least one reviewer from the "omop" Github team before it it merged from a feature branch to the dev branch. The review will focus on checking that the code confirms to the tables requirements and or coding standards.
     1. A secondary review may be asked for from a member of the data engineering team if changes are made to the `resources` folder.
