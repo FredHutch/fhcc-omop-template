@@ -1,0 +1,79 @@
+name: CICD OMOP
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+
+  push:
+    branches:
+      - dev
+      - main
+
+
+jobs:
+# We don't have any tests immpletemented yet - will uncomment once we do
+#   test:
+#     runs-on: self-hosted
+    
+#     steps:
+#     - uses: actions/checkout@v4
+    
+#     - name: Set up Python
+#       uses: actions/setup-python@v4
+#       with:
+#         python-version: '3.12'
+    
+#     - name: Set up Java
+#       uses: actions/setup-java@v4
+#       with:
+#         distribution: 'temurin'
+#         java-version: '17'
+    
+#     - name: Install dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         python -m pip install -r requirements.txt
+    
+#     - name: Run tests
+#       run: |
+#         python -m pytest -v
+
+  deploy:
+    # we only want to deploy if we have a push to dev or main
+    # we do not deploy for merges to develop
+    if: (github.event_name == 'push') && (github.ref_name == 'main' || github.ref_name == 'dev')
+    # needs: test
+    runs-on: self-hosted
+ 
+    environment: ${{ github.ref_name }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Setup Databricks CLI
+      uses: databricks/setup-cli@main
+
+    - name: Debug GitHub context
+      run: |
+        echo "Environment derived: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}"
+
+    - name: Deploy to Databricks
+      env:
+        # if the branch name is main, we want to target the prod environment
+        # if the branch name is dev, we want to target the test environment
+        ENVIRONMENT_NAME: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'dev' && 'test'}}
+        DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+        DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_WORKSPACE_ADMIN_SP_ID }}
+        DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_WORKSPACE_ADMIN_SP_SECRET }}
+      run: |
+        python -m pip install uv
+        echo "Deploying to target: $ENVIRONMENT_NAME"
+        echo "target env is: $DATABRICKS_HOST"
+        databricks bundle deploy --target $ENVIRONMENT_NAME
