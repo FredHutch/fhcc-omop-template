@@ -64,7 +64,7 @@ Information for OMOP CDM users will be available on the [your website]().
 │   │   └── 📃 skill.md
 │   └── 📂 add_task                                   # Instructions for adding a task to a bundle job for populating a new CDM table
 │       └── 📃 skill.md
-├── 📁 docs                                           # Team development workflows 
+├── 📁 docs                                           # Team development workflows and guidelines
 ├── 📃 .gitignore
 ├── 📃 CODEOWNERS                                     # Defines individuals and teams responsible for the code in this repository
 ├── 📃 databricks.yml                                 # Databricks asset bundle definition
