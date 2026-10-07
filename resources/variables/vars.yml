@@ -1,0 +1,36 @@
+# Variable declarations
+variables:
+  warehouse_id: 
+    description: warehouse
+  cluster_id: 
+    description: cluster for tasks that cannnot run on serverless, such as R tasks; defaults to Data Steward Cluster
+  clarity_catalog:
+    description: "The catalog where the Clarity data is saved"
+  clarity_daily_schema:
+    description: "Catalog that contains the Epic Clarity daily data"
+  clarity_weekly_schema:
+    description: "Catalog that contains the Epic Clarity weekly data"
+  omop_catalog:
+    description: "The catalog where the OMOP data is saved"
+  omop_schema:
+    description: "The schema where the OMOP data is saved"
+  omop_intermediate_schema:
+    description: "The schema where the intermediate tables used in generating the OMOP CDM tables are saved"
+  omop_vocab_schema:
+    description: "The schema where the vocabulary related tables uploaded from CSV files are saved"
+  omop_monitoring_schema:
+    description: "The schema where tables for monitoring and validating the OMOP CDM tables are saved"
+  takepartnw_catalog: 
+    description: "The catalog where TakePART-NW study enrollment data is saved"
+  takepartnw_schema: 
+    description: "The schema where TakePART-NW study enrollment data is saved"
+  ocdo_analytics_email_destination_id:
+    description: "Databricks destination_id for sending notifications to analytics@fredhutch.org."
+  table_refresh_job_id:
+    description: "Job ID for relevant omop_table_refresh job."
+  deid_job_id:
+    description: "Job ID for relevant omop_deid job."
+  dqd_job_id:
+    description: "Job ID for relevant dqd job."
+  dqd_dashboard_id:
+    description: "ID for the DQD dashboard."
