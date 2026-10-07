@@ -1,3 +1,5 @@
+# Overwrites all non-vocabulary OMOP CDM main and intermediate tables
+# then runs DQX validation checks.
 resources:
   jobs:
     omop_table_refresh:
