@@ -16,7 +16,7 @@ resources:
         notification:
           notify_on_ok: FALSE
           subscriptions:
-            - user_email: "mstachur@fredhutch.org"
+            - user_email: your_email@gmail.com
             - destination_id: ${var.ocdo_analytics_email_destination_id}
       query_text: |
         with metrics_ordered as (
