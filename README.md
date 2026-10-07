@@ -2,9 +2,9 @@
 
 ## Purpose
 
-This repo provides an example of data and analytics engineering best practices for development of an OMOP CDM instance on Databricks.
+This repo provides an example of data and analytics engineering best practices for development of an OMOP CDM instance on Databricks. Since the data schema for the Epic Clarity data utilized in the Fred Hutch Cancer Center OMOP CDM instance is proprietary, we are not able to include in this repository many of our data transformation (`.sql`) and technical documentation (e.g., `models/person/person_requirements.md`) files. We plan to share these files in the future through the [Epic UserWeb]([url](https://userweb.epic.com/)).
 
-Add a short description of your OMOP CDM instance here, including:
+A short description of your OMOP CDM instance would be included here, including:
 
 - What data is transformed
 - What CDM version is used
