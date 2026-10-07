@@ -50,7 +50,7 @@ Information for OMOP CDM users will be available on the [your website]().
 |   └── 📄 omop_dqx_monitoring_tables.yml             # Lists the files where the DQX checks to run for each table are saved
 ├── 📁 resources                                      # Defines the resources that are part of the bundle. Only folders for the relevant resources are included.
 │   ├── 📂 alerts                                     # Contains .alerts.yml files defining alerts
-│   ├── 📂 jobs                                       # Contains .job.yml files defining job
+│   ├── 📂 jobs                                       # Contains .job.yml files defining job, and .png diagrams illustrating pipeline dependencies
 │   ├── 📂 variables                                  # Contains one vars.yml file defining all variables used in the bundle
 │   ├── 📂 dashboard                                  # Contains .dashboard.yml files defining dashboard resources
 │   └── 📂 secret_scopes                              # .secret_scope.yml defining the scopes for secrets utilized in the bundle
