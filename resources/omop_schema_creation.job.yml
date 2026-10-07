@@ -1,3 +1,5 @@
+# Creates the main OMOP CDM and intermediate tables then sets not null 
+# constraints, primary and foreign keys, and table and column comments.
 resources:
   jobs:
     omop_schema_creation:
