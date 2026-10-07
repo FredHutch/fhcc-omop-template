@@ -1,3 +1,5 @@
+# Load custom vocabuary within CSV files within the bundle 
+# into Databricks tables.
 resources:
   jobs:
     omop_custom_vocab_csv_to_table:
