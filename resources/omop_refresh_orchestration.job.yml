@@ -1,3 +1,5 @@
+# Orchestrates the sequential running of several jobs across bundles/repos
+# to refresh all OMOP data products that are updated weekly.
 resources:
   jobs:
     omop_refresh_orchestration:
