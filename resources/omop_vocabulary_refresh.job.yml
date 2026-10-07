@@ -1,8 +1,11 @@
+# Update all OMOP vocabuarly tables, including tables with only Athena
+# vocabulary and tables with both Athena and custom vocabulary
 resources:
   jobs:
     omop_vocabulary_refresh:
       name: omop_vocabulary_refresh
       tasks:
+        # Update tables with only Athena vocabulary
         - task_key: vocabulary_athena_only
           sql_task:
             file:
@@ -12,6 +15,7 @@ resources:
               omop_schema: ${var.omop_schema}
               omop_vocab_schema: ${var.omop_vocab_schema}
             warehouse_id: ${var.warehouse_id}
+        # Update tables with both Athena and custom vocabulary
         - task_key: vocabulary_custom
           sql_task:
             file: 
