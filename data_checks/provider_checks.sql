@@ -143,23 +143,6 @@ ORDER BY provider_count DESC
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## Compare rows counts
-
--- COMMAND ----------
-
-SELECT
-  (SELECT COUNT(*) FROM provider) AS provider_row_count,
-  (SELECT COUNT(*) FROM clean_uwm_dawg.clarity_daily.clarity_ser) AS clarity_ser_row_count,
-  100 * provider_row_count / clarity_ser_row_count as prop
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC 4% of records are being dropped from clarity_ser to the provider table by the filters, which is in line with expecations.
-
--- COMMAND ----------
-
--- MAGIC %md
 -- MAGIC ## Duplicate provider_id
 
 -- COMMAND ----------
