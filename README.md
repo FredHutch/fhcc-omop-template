@@ -64,6 +64,15 @@ Information for OMOP CDM users will be available on the [your website]().
 │   │   └── 📃 skill.md
 │   └── 📂 add_task                                   # Instructions for adding a task to a bundle job for populating a new CDM table
 │       └── 📃 skill.md
+├── 📁 vocabulary                                     # Custom vocabulary mapping
+│   ├── 📂 csv_to_table
+│   │   └── 📃 custom_vocab_csv_to_table.py           # Load custom vocabuary within CSV files within the bundle into 
+│   ├── 📂 custom                                     # CSV files defining custom vocabulary
+│   ├── 📂 mapping
+│   │   └── 📃 create_concept_relationship_mapping.py # Map from the source-to-concept format into the concept relationship format    
+│   ├── 📂 custom                                     # Custom vocabulary source_to_concept mapping from Usagi
+│   ├── 📂 usagi_files                                # Custom vocabulary mapping files from Usagi
+│   └── 📂 visit_mapping_rules                        # Information to support visit_occurrence visit type mapping
 ├── 📁 docs                                           # Team development workflows and guidelines
 ├── 📃 .gitignore
 ├── 📃 CODEOWNERS                                     # Defines individuals and teams responsible for the code in this repository
