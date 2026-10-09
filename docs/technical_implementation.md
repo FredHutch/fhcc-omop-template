@@ -449,6 +449,10 @@ All tables and columns will have an informative defined comment that will be acc
 
 SQL code should follow the SQL style guideline ("docs/sql_style_guideline.md"). As part of the CI/CD process, a GitHub Action using [SQLAutoFormatter](https://github.com/marketplace/actions/sqlautoformatter) runs an automated code formatter to ensure the code complies with these standards.
 
+## AI Tooling
+
+We utilize [Genie Code](https://www.databricks.com/product/genie/code) for assistance in OMOP development work. In the `skills/` folder we have defined skills through Markdown (.md) files to enable better AI support for OMOP development. To utilize these skill within your Databricks workspace, in the `/Workspace/Users/<your_user_email>/.assistant/skills/` folder, copy or clone the repo (or just the `skills/` folder).
+
 ## Lakeflow Declarative Pipelines & Materialized Views
 
 <aside>
