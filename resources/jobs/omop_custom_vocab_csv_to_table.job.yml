@@ -1,4 +1,4 @@
-# Load custom vocabuary within CSV files within the bundle 
+# Load custom vocabulary within CSV files within the bundle 
 # into Databricks tables.
 resources:
   jobs:
