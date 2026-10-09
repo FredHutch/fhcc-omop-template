@@ -1,5 +1,5 @@
-# Update all OMOP vocabuarly tables, including tables with only Athena
-# vocabulary and tables with both Athena and custom vocabulary
+# Overwrite all OMOP vocabulary tables, including tables with only
+# Athena vocabulary and tables with both Athena and custom vocabulary
 resources:
   jobs:
     omop_vocabulary_refresh:
