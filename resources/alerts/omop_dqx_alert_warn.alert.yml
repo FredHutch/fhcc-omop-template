@@ -1,4 +1,4 @@
-# Alert to notifiy when the DQX checks indicate any warnings  
+# Alert to notify when the DQX checks indicate any warnings  
 # from the most recent run of the checks for each OMOP table.
 resources:
   alerts:
