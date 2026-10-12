@@ -17,7 +17,6 @@ In the CARDS Databricks there are 3 environments. Below is a summary of how thes
 
 - **production** - only data created through code on the `main` branch of the repo as part of a versioned release will be available here
 - **test** - all development and testing of new features will occur here. The `curated_omop_test` schema will be created off the `dev` branch of the repo
-- **development** - not used or accessible for OMOP work
 
 ## Schema Organization
 
