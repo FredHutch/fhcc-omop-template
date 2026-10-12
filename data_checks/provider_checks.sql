@@ -21,74 +21,24 @@ order by random()
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## Null and 0 counts by column
+-- MAGIC ## Check DQX results
 
 -- COMMAND ----------
 
-SELECT
-  COUNT(*) AS total_rows,
+select *
+from omop_monitoring.provider_quarantine
 
-  -- provider_id
-  ROUND(SUM(CASE WHEN provider_id IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS provider_id_null_pct,
+-- COMMAND ----------
 
-  -- provider_name
-  ROUND(SUM(CASE WHEN provider_name IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS provider_name_null_pct,
-
-  -- npi
-  ROUND(SUM(CASE WHEN npi IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS npi_null_pct,
-
-  -- dea
-  ROUND(SUM(CASE WHEN dea IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS dea_null_pct,
-
-  -- specialty_concept_id
-  ROUND(SUM(CASE WHEN specialty_concept_id IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS specialty_concept_id_null_pct,
-  ROUND(SUM(CASE WHEN specialty_concept_id = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS specialty_concept_id_zero_pct,
-
-  -- care_site_id
-  ROUND(SUM(CASE WHEN care_site_id IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS care_site_id_null_pct,
-  ROUND(SUM(CASE WHEN care_site_id = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS care_site_id_zero_pct,
-
-  -- year_of_birth
-  ROUND(SUM(CASE WHEN year_of_birth IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS year_of_birth_null_pct,
-
-  -- gender_concept_id
-  ROUND(SUM(CASE WHEN gender_concept_id IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS gender_concept_id_null_pct,
-  ROUND(SUM(CASE WHEN gender_concept_id = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS gender_concept_id_zero_pct,
-
-  -- provider_source_value
-  ROUND(SUM(CASE WHEN provider_source_value IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS provider_source_value_null_pct,
-
-  -- specialty_source_value
-  ROUND(SUM(CASE WHEN specialty_source_value IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS specialty_source_value_null_pct,
-
-  -- specialty_source_concept_id
-  ROUND(SUM(CASE WHEN specialty_source_concept_id IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS specialty_source_concept_id_null_pct,
-  ROUND(SUM(CASE WHEN specialty_source_concept_id = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS specialty_source_concept_id_zero_pct,
-
-  -- gender_source_value
-  ROUND(SUM(CASE WHEN gender_source_value IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS gender_source_value_null_pct,
-
-  -- gender_source_concept_id
-  ROUND(SUM(CASE WHEN gender_source_concept_id IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS gender_source_concept_id_null_pct,
-  ROUND(SUM(CASE WHEN gender_source_concept_id = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS gender_source_concept_id_zero_pct,
-
-  -- prov_type_concept_id
-  ROUND(SUM(CASE WHEN prov_type_concept_id IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS prov_type_concept_id_null_pct,
-  ROUND(SUM(CASE WHEN prov_type_concept_id = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS prov_type_concept_id_zero_pct,
-
-  -- prov_type_source_value
-  ROUND(SUM(CASE WHEN prov_type_source_value IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS prov_type_source_value_null_pct,
-
-  -- prov_type_source_concept_id
-  ROUND(SUM(CASE WHEN prov_type_source_concept_id IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS prov_type_source_concept_id_null_pct,
-  ROUND(SUM(CASE WHEN prov_type_source_concept_id = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS prov_type_source_concept_id_zero_pct
-
-FROM provider
+select *
+from curated_omop_test.omop_monitoring.dqx_metrics
+where table = 'provider'
+order by monitoring_timestamp desc
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC No nulls for provider_id or provider_name. All of the other coulmns do have NULLs or 0s in line with what was shown in the exploration.
+-- MAGIC No issues found by the DQX checks for this table.
 
 -- COMMAND ----------
 
