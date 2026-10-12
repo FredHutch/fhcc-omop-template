@@ -33,63 +33,7 @@ Within the `curated_omop` catalog in the production environment and the `curated
 - **omop_intermediate** – intermediate tables used in generating the OMOP CDM tables, with informative names describing table contents.
 - **omop_vocab** - vocabulary related tables uploaded from CSV files, including both standard OMOP vocabularies accessed from [Athena](https://athena.ohdsi.org/) and custom vocabularies (tracked in the repo within `vocabulary/custom` folder). The tables in this schema are used in creating the final OMOP CDM vocabulary related tables that live in the `omop` schema
 - **omop_monitoring** - contains tables for monitoring data quality of final OMOP tables
-- **omop_dqd** - contains required libraries (within volumes) and results from the Cancer AI Alliance (CAIA) data checks
 - **information_schema** - Databricks Unity Catalog standard, automatically created, read-only schema containing metadata about the catalog
-
-Within the `curated_omop_deid` catalog in the production environment and the `curated_omop_deid_test` catalog in the test environment are the de-identified data. The schemas include:
-
-- **omop_deid** - de-identified final OMOP tables
-- **omop_monitoring** - contains tables for monitoring data quality of final OMOP tables (none currently)
-- **information_schema** - Databricks Unity Catalog standard, automatically created, read-only schema containing metadata about the catalog
-
-Within the `curated_omop_caia` catalog in the production environment and the `curated_omop_caia_test` catalog in the test environment are the CAIA data and related checks. The schemas include:
-
-- **omop** - final OMOP tables for CAIA
-- **omop_denorm** - denormalized OMOP CAIA data
-- **omop_monitoring** - contains tables for monitoring data quality of final OMOP tables (none currently)
-- **achilles_results** - [Achilles](https://ohdsi.github.io/Achilles/) results from the CAIA submission runner checks
-- **information_schema** - Databricks Unity Catalog standard, automatically created, read-only schema containing metadata about the catalog
-- **grassberger_fhirb0020990** (test only) - tables for this project
-- **project_files** (test only)
-
-## Feature Branch Environments
-
-<aside>
-💡
-
-**Summary**: We will make deep clones of the `curated_omop_test` for feature branch testing as-needed.
-
-</aside>
-
-For active development and testing work, additional catalogs can be created within the test environment with schema organization matching that defined in the *Schema Organization* section above. The catalog name should indicate the relevant user and the feature being developed (e.g., curated_omop_mstachur_visit_occurrence). This can be created from a deep clone of each table in `curated_omop_test` (`CREATE OR REPLACE TABLE ... DEEP CLONE`), and in the future may be developed through an automated process when a new branch is created in the omop_cdm_v5.4 repo and an automatic cleanup of outdated catalog no longer relevant (similar to the workflow defined in https://medium.com/@manik.ruet08/feature-branch-environments-for-dbt-snowflake-how-to-test-without-impacting-prod-5bba201ac7b4) and/or through use of dbt.
-
-## Git Repository Organization
-
-<aside>
-💡
-
-**Summary**: The repository follows a standardized structure for ease of navigation.
-
-</aside>
-
-The omop_cdm_v5.4 repo contains the folders and files defined below. See also the repository README.
-
-- **models** – this contains the SQL queries for populating the OMOP CDM tables and Markdown files documenting table requirements (`templates/Table Requirements Template.md`). These are organized in sub-folders by table name or process (e.g. initially create all tables, updating vocabulary tables)
-- **resources**
-    - **variables** - contains `vars.yml` to define all variables used in [Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/) (DABs) in the repo
-    - **jobs** - contains `.job.yml` files to define the tasks within each job in the repo
-    - **alerts** - contains `.alert.yml` files for defining query results for notification alerts
-- **.github** - issue and pull request temaplates, Github Action workflows
-- **data_checks** - Summary-level quality checks by table
-- **monitoring** - Implements DQX checks
-- **src** - source code not included in models, including Unity Catalog catalog setup and permissions
-- **vocabulary** - Custom vocabulary mapping
-- **dashboards (none currently in this repo)** - contains the `.lvdash.json` files defining dashboard queries and contents.
-- **databricks.yml** - defines DAB [configurations](https://docs.databricks.com/aws/en/dev-tools/bundles/settings) that will be utilized for all jobs in the repo
-- **CODEOWNERS** - defines individuals or teams responsible for the repo, from whom code review will be required
-- **README** - overview of the repo organization and contribution practices
-
-Branch naming will follow the convention in [We are using the [git flow](https://nvie.com/posts/a-successful-git-branching-model/#release-branches) branching model for our OMOP development workflow. We will use the conventions for naming branches defined in "docs/development_workflow.md".
 
 ## Bundles
 
@@ -129,12 +73,10 @@ Jobs we currently have defined are listed below, with links to the job in the pr
 | Name | Purpose | Schedule |
 | --- | --- | --- |
 | omop_schema_creation | Define all OMOP tables, columns with data types, primary and foreign keys, non-null constraints, and table and column comments. Based on OMOP standard [Data Definition Language (DDL)](https://github.com/OHDSI/CommonDataModel/tree/main/inst/ddl/5.4/spark). | With new version release, or as needed with schema updates |
-| omop_deid_schema_creation | Define OMOP de-identified tables | With new version release, or as needed with schema updates |
 | omop_custom_vocab_csv_to_table | Load custom vocabulary within CSV files within the bundle into Databricks tables | With new version release, or as needed with custom vocabulary updates |
 | omop_vocabulary_refresh | Overwrite all OMOP vocabulary tables, including tables with only Athena vocabulary and tables with both Athena and custom vocabulary | With new version release, or as needed with vocabulary updates |
-| omop_refresh_orchestration | All OMOP updates requred on a weekly basis: omop_table_refresh, omop_deid, omop_dqd, and refresh_dqd_dashboard | Weekly on Wednesdays at 2am Pacific Time |
+| omop_refresh_orchestration | All OMOP updates requred on a weekly basis: omop_table_refresh, omop_dqd, and refresh_dqd_dashboard | Weekly on Wednesdays at 2am Pacific Time |
 | omop_table_refresh | Overwrites all non-vocabulary OMOP CDM main and intermediate tables then runs DQX validation checks. | Scheduled as part of omop_refresh_orchestration |
-| omop_deid | Overwrites all OMOP de-identified tables | Scheduled as part of omop_refresh_orchestration |
 | dqd | Run OMOP Data Quality Dashboard (DQD) checks and save results | Scheduled as part of omop_refresh_orchestration |
 
 ### Deploying Bundles
