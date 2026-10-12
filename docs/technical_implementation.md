@@ -33,7 +33,6 @@ Within the `curated_omop` catalog in the production environment and the `curated
 - **omop_intermediate** – intermediate tables used in generating the OMOP CDM tables, with informative names describing table contents.
 - **omop_vocab** - vocabulary related tables uploaded from CSV files, including both standard OMOP vocabularies accessed from [Athena](https://athena.ohdsi.org/) and custom vocabularies (tracked in the repo within `vocabulary/custom` folder). The tables in this schema are used in creating the final OMOP CDM vocabulary related tables that live in the `omop` schema
 - **omop_monitoring** - contains tables for monitoring data quality of final OMOP tables
-- **achilles** - contains tables with [Achilles](https://ohdsi.github.io/Achilles/) results
 - **omop_dqd** - contains required libraries (within volumes) and results from the Cancer AI Alliance (CAIA) data checks
 - **information_schema** - Databricks Unity Catalog standard, automatically created, read-only schema containing metadata about the catalog
 
