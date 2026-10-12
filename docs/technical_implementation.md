@@ -23,7 +23,7 @@ In the CARDS Databricks there are 3 environments. Below is a summary of how thes
 <aside>
 💡
 
-**Summary**: We will use schemas to separate the final transformation data (in the `omop` schema) from intermediate and complementary data. The de-identified and Cancer AI Alliance (CAIA) OMOP data are in separate catalogs.
+**Summary**: We will use schemas to separate the final transformation data (in the `omop` schema) from intermediate and complementary data. 
 
 </aside>
 
