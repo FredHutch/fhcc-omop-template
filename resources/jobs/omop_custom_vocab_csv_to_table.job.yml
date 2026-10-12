@@ -1,0 +1,33 @@
+# Load custom vocabulary within CSV files within the bundle 
+# into Databricks tables.
+resources:
+  jobs:
+    omop_custom_vocab_csv_to_table:
+      name: omop_custom_vocab_csv_to_table
+      tasks:
+        - task_key: csv_to_table
+          spark_python_task:
+            python_file: ../../vocabulary/csv_to_table/custom_vocab_csv_to_table.py
+            parameters:
+              - "--omop_catalog"
+              - ${var.omop_catalog}
+              - "--omop_vocab_schema"
+              - ${var.omop_vocab_schema}
+              - "--omop_schema"
+              - ${var.omop_schema}
+              - "--omop_intermediate_schema"
+              - ${var.omop_intermediate_schema}
+              - "--path"
+              - ${workspace.file_path}
+          environment_key: default
+      # A list of task execution environment specifications that can be referenced by tasks of this job.
+      environments:
+        - environment_key: default
+
+          # Full documentation of this spec can be found at:
+          # https://docs.databricks.com/api/workspace/jobs/create#environments-spec
+          spec:
+            environment_version: "5"
+      tags:
+        Function: Transformation
+        "Transformation Jobs": OMOP

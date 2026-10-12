@@ -1,0 +1,49 @@
+- criticality: error
+  check:
+    function: is_not_null_and_not_empty
+    arguments:
+      column: person_id
+- criticality: error
+  check:
+    function: is_unique
+    arguments:
+      columns: 
+      - person_id
+- criticality: error
+  check:
+    function: is_not_null_and_not_empty
+    arguments:
+      column: year_of_birth
+- criticality: error
+  check:
+    function: is_not_null_and_not_empty
+    arguments:
+      column: gender_concept_id
+- criticality: warn
+  check:
+    function: is_valid_timestamp
+    arguments:
+      column: birth_datetime
+- criticality: warn
+  check:
+    function: is_not_in_future
+    arguments:
+      column: birth_datetime      
+- criticality: error
+  check:
+    function: is_not_null_and_not_empty
+    arguments:
+      column: ethnicity_concept_id
+- criticality: error
+  check:
+    function: is_not_null_and_not_empty
+    arguments:
+      column: race_concept_id
+- criticality: warn
+  check:
+    function: is_valid_date
+    arguments:
+      column: birth_date
+
+
+      

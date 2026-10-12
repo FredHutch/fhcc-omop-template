@@ -1,0 +1,38 @@
+# Orchestrates the sequential running of several jobs across bundles/repos
+# to refresh all OMOP data products that are updated weekly.
+resources:
+  jobs:
+    omop_refresh_orchestration:
+      name: omop_refresh_orchestration
+      email_notifications:
+        on_failure:
+          - you@gmail.com
+      schedule:
+        quartz_cron_expression: 0 0 2 ? * Wed
+        timezone_id: America/Los_Angeles
+      tasks:
+        - task_key: omop_table_refresh
+          run_job_task:
+            job_id: ${var.table_refresh_job_id}
+        - task_key: omop_deid
+          depends_on:
+            - task_key: omop_table_refresh
+          run_job_task:
+            job_id: ${var.deid_job_id}
+        - task_key: omop_dqd
+          depends_on:
+            - task_key: omop_table_refresh
+          run_job_task:
+            job_id: ${var.dqd_job_id}
+        - task_key: refresh_dqd_dashboard
+          depends_on:
+              - task_key: omop_dqd
+          dashboard_task:
+            dashboard_id: ${var.dqd_dashboard_id}
+            warehouse_id: ${var.warehouse_id}
+      tags:
+        Function: Transformation
+        "Transformation Jobs": OMOP
+      queue:
+        enabled: true
+      performance_target: STANDARD

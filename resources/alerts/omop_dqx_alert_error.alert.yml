@@ -1,0 +1,38 @@
+# Alert to notify when the DQX checks indicate any errors  
+# from the most recent run of the checks for each OMOP table.
+resources:
+  alerts:
+    omop_dqx_alert_error:
+      display_name: "OMOP DQX Record Error"
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source:
+          name: "error_row_count"
+          display: "source"
+          aggregation: "COUNT"
+        threshold:
+          value:
+            double_value: 0.0
+        notification:
+          notify_on_ok: FALSE
+          subscriptions:
+            - user_email: your_email@gmail.com
+            - destination_id: ${var.ocdo_analytics_email_destination_id}
+      query_text: |
+        with metrics_ordered as (
+          select *
+            , ROW_NUMBER() OVER (
+                      PARTITION BY catalog, schema, table
+                      ORDER BY monitoring_timestamp DESC
+                  ) AS ordering
+          from ${var.omop_catalog}.${var.omop_monitoring_schema}.dqx_metrics
+        )
+        select *
+        from metrics_ordered
+        where ordering=1
+          AND error_row_count > 0
+      warehouse_id: ${var.warehouse_id}
+      schedule:
+        pause_status: UNPAUSED
+        quartz_cron_schedule: "0 0 15 ? * Mon"
+        timezone_id: "America/Los_Angeles"

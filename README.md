@@ -2,9 +2,9 @@
 
 ## Purpose
 
-This repo provides an example of data and analytics engineering best practices for development of an OMOP CDM instance on Databricks.
+This repo provides an example of data and analytics engineering best practices for development of an OMOP CDM instance on Databricks. Since the data schema for the Epic Clarity data utilized in the Fred Hutch Cancer Center OMOP CDM instance is proprietary, we are not able to include in this repository many of our data transformation (`.sql`) and technical documentation (e.g., `models/person/person_requirements.md`) files. We plan to share these files in the future through the [Epic UserWeb]([url](https://userweb.epic.com/)).
 
-Add a short description of your OMOP CDM instance here, including:
+A short description of your OMOP CDM instance would be included here, including:
 
 - What data is transformed
 - What CDM version is used
@@ -21,31 +21,71 @@ Information for OMOP CDM users will be available on the [your website]().
 ```
 📂 fhcc-omop-template
 ├── 📁 .github
-├── 📁 alerts                         # Example table-level alert
-├── 📁 data_checks                    # Example summary-level quality checks
+|   ├── 📄 pull_request_template.md                   # Default template for all pull requests
+|   ├── 📂 ISSUE_TEMPLATE                             # Templates for issues
+|   |   ├── 📄 request.md                             # Template for issue requesting new data or features
+│   │   └── 📃 bug-report.md                          # Template for reporting bugs
+|   ├── 📂 workflows                                  # Define GitHub Actions
+|   |   ├── 📄 cicd.yml                               # Continuous Integration/Continuous Deliver (CI/CD) to deploy bundle updates to Databricks
+│   │   └── 📃 sql-formatting.yml                     # Automatically update SQL code formatting in line with standards
+├── 📁 data_checks                                    # Summary-level quality checks by table
 ├── 📁 models                         
-│   ├── 📂 table-name                 # 1 folder per CDM table
-│   │   ├── 📄 table-requirements.md
-|   |   ├── 📄 table-comments.sql
-|   |   ├── 📄 table_checks.yml
-│   │   └── 📃 populate_table.sql
-|   ├── 📂 table_creation             # creates empty tables and constraints 
-│   └── 📂 vocabulary_concept         # creates and populate vocabulary tables
-├── 📁 monitoring
-├── 📁 models 
-├── 📁 resources
-├── 📁 src 
+│   ├── 📂 table_name                                 # 1 folder per CDM table
+│   │   ├── 📄 table_requirements.md                  # Requirements the data transformation should comply with
+|   |   ├── 📄 table_comments.sql                     # Set table and columns comments
+|   |   ├── 📄 table_checks.yml                       # DQX checks
+│   │   └── 📃 populate_table.sql                     # Data transformation to create and overwrite the table
+|   ├── 📂 table_creation                             # Creates empty tables, defines constraints and foreign and primary keys
+|   |   ├── 📄 table_creation.sql                     # Data definition language (DDL)
+|   |   ├── 📄 not_null_constraints.sql               
+|   |   ├── 📄 primary_key_constraints.sql            
+|   |   ├── 📄 foreign_key_constraints.sql            
+│   │   └── 📃 intermediate_table_creation.sql        # Defines intermediate tables used in creation of CDM tables but not part of the CDM
+│   └── 📂 vocabulary_concept                         # Creates and populate vocabulary tables
+|       ├── 📄 vocabulary_concepts_custom_updates.sql # Update vocabulary tables based on both Athena and custom vocabulary
+│       └── 📃 vocabulary_concepts_athena_only.sql    # Updates vocabulary tables based only on Athena
+├── 📁 monitoring                                     # Implements DQX checks
+|   ├── 📄 monitoring_table_creation.sql              # Creates the tables to hold monitoring results
+|   ├── 📄 omop_dqx_monitoring.py                     # Runs DQX checks for all tables
+|   └── 📄 omop_dqx_monitoring_tables.yml             # Lists the files where the DQX checks to run for each table are saved
+├── 📁 resources                                      # Defines the resources that are part of the bundle. Only folders for the relevant resources are included.
+│   ├── 📂 alerts                                     # Contains .alerts.yml files defining alerts
+│   ├── 📂 jobs                                       # Contains .job.yml files defining job, and .png diagrams illustrating pipeline dependencies
+│   ├── 📂 variables                                  # Contains one vars.yml file defining all variables used in the bundle
+│   ├── 📂 dashboard                                  # Contains .dashboard.yml files defining dashboard resources
+│   └── 📂 secret_scopes                              # .secret_scope.yml defining the scopes for secrets utilized in the bundle
+├── 📁 src
+│   └── 📂 catalog                                    # Unity Catalog catalog setup and permissions
+├── 📁 templates
+|   ├── 📄 OMOP Explanatory Notebook Template.md      # Template for explanatory analysis notebooks to inform data transformation decisions
+|   └── 📄 Table Requirements Template.md             # Template for models/table_name/table_requirements.md
+├── 📁 skills                                         # Skills utilized by AI agents
+│   ├── 📂 populate_new_omop_table                    # Instructions for populating a new CDM table
+│   │   └── 📃 skill.md
+│   └── 📂 add_task                                   # Instructions for adding a task to a bundle job for populating a new CDM table
+│       └── 📃 skill.md
+├── 📁 vocabulary                                     # Custom vocabulary mapping
+│   ├── 📂 csv_to_table
+│   │   └── 📃 custom_vocab_csv_to_table.py           # Load custom vocabuary within CSV files within the bundle into 
+│   ├── 📂 custom                                     # CSV files defining custom vocabulary
+│   ├── 📂 mapping
+│   │   └── 📃 create_concept_relationship_mapping.py # Map from the source-to-concept format into the concept relationship format    
+│   ├── 📂 custom                                     # Custom vocabulary source_to_concept mapping from Usagi
+│   ├── 📂 usagi_files                                # Custom vocabulary mapping files from Usagi
+│   └── 📂 visit_mapping_rules                        # Information to support visit_occurrence visit type mapping
+├── 📁 docs                                           # Team development workflows and guidelines
 ├── 📃 .gitignore
-├── 📃 CODEOWNERS
+├── 📃 CODEOWNERS                                     # Defines individuals and teams responsible for the code in this repository
+├── 📃 databricks.yml                                 # Databricks asset bundle definition
 └── 📄 README.md 
 ```
 
 
 ## Contributing
-Our team development workflow is outlined in the [docs] page, including best practices for code review and our code style guidelines.
+Our team development workflow is outlined in the [docs] folder, including best practices for code review and our code style guidelines.
 
-If you have found a bug or erros (in code or how you belive the data is mapped), please file an issue on this repo.
+If you have found a bug or errors (in code or how you believe the data is mapped), please file an issue on this repo.
 
 ## Contacts
 - Megan Stachura, Analytics Engineer, lead OMOP developer (mstachur@fredhutch.org)
-- Monica Gerber, Data Science Manager, OMOP product manager & developer (mgerber@fredhutch.org)
+- Monica Gerber, Data Science Manager (mgerber@fredhutch.org)

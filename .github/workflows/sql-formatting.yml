@@ -1,0 +1,30 @@
+name: SQLAutoFormatter
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install zetasql
+        run: |
+          wget https://github.com/Matts966/zetasql-formatter/releases/latest/download/zetasql-formatter_linux_x86_64.zip
+          sudo unzip zetasql-formatter_linux_x86_64.zip -d /usr/local/bin
+          rm zetasql-formatter_linux_x86_64.zip
+
+      - name: Run SQLAutoFormatter
+        uses: yoheikikuta/sql-autoformat-action@v1.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
