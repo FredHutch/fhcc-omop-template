@@ -88,4 +88,4 @@ If you have found a bug or errors (in code or how you believe the data is mapped
 
 ## Contacts
 - Megan Stachura, Analytics Engineer, lead OMOP developer (mstachur@fredhutch.org)
-- Monica Gerber, Data Science Manager, OMOP product manager & developer (mgerber@fredhutch.org)
+- Monica Gerber, Data Science Manager (mgerber@fredhutch.org)
